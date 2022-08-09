@@ -12,15 +12,15 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
-const createProductItemElement = ({ sku, name, image }) => {
+const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) => {
   const section = document.createElement('section');
   section.className = 'item';
-
+  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  
   return section;
 };
 
@@ -38,4 +38,16 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-window.onload = () => { };
+const renderProductItems = async () => {
+  const items = document.querySelector('.items');
+  const { results } = await fetchProducts();
+  
+  results.forEach((item) => {
+    const newItem = createProductItemElement(item);
+    items.appendChild(newItem);
+  });
+};
+
+window.onload = async () => { 
+  await renderProductItems();
+};
