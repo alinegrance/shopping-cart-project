@@ -12,22 +12,8 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
-const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) => {
-  const section = document.createElement('section');
-  section.className = 'item';
-  
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  
-  return section;
-};
-
-const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
-
 const cartItemClickListener = (event) => {
-  // coloque seu código aqui
+  
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -37,6 +23,37 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   li.addEventListener('click', cartItemClickListener);
   return li;
 };
+
+const addItemToCart = async (sku) => {
+  const item = await fetchItem(sku);
+  const { id, title, price } = item;
+  const newItem = createCartItemElement({ sku: id, name: title, salePrice: price });
+  const cartList = document.querySelector('.cart__items');
+  cartList.appendChild(newItem);
+};
+
+const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) => {
+  const section = document.createElement('section');
+  section.className = 'item';
+
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  const addBtn = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
+  addBtn.addEventListener('click', () => addItemToCart(sku));
+  section.appendChild(addBtn);
+  
+  return section;
+};
+
+// const addBtn = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
+  // addBtn.addEventListener('click', async () => {
+  //   const item = await fetchItem(sku);
+  //   console.log(item);
+  //   createCartItemElement(item);
+  // });
+
+const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
 const renderProductItems = async () => {
   const items = document.querySelector('.items');
