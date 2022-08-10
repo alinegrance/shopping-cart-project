@@ -1,4 +1,5 @@
 const cartList = document.querySelector('.cart__items');
+let localCartList = [];
 
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
@@ -14,20 +15,26 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
-const cartItemClickListener = (event) => {
+const cartItemClickListener = (event, sku) => {
   cartList.removeChild(event.target);
+  // console.log(event.target);
+  localCartList = localCartList.filter((item) => item.id !== sku);
+  // console.log(localCartList);
+  saveCartItems(localCartList);
 };
 
 const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => cartItemClickListener(event, sku));
   return li;
 };
 
 const addItemToCart = async (sku) => {
   const item = await fetchItem(sku);
+  localCartList.push(item);
+  saveCartItems(localCartList);
   const newItem = createCartItemElement(item);
   cartList.appendChild(newItem);
 };
@@ -46,13 +53,6 @@ const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) =>
   return section;
 };
 
-// const addBtn = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
-  // addBtn.addEventListener('click', async () => {
-  //   const item = await fetchItem(sku);
-  //   console.log(item);
-  //   createCartItemElement(item);
-  // });
-
 const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
 const renderProductItems = async () => {
@@ -65,6 +65,15 @@ const renderProductItems = async () => {
   });
 };
 
+const renderLocalCartList = (list) => {
+  list.forEach((item) => {
+    const newItem = createCartItemElement(item);
+    cartList.appendChild(newItem);
+  });
+};
+
 window.onload = async () => { 
   await renderProductItems();
+  localCartList = getSavedCartItems('cartItems') || [];
+  renderLocalCartList(localCartList);
 };
