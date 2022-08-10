@@ -65,10 +65,14 @@ const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) =>
 
 // const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
+// const addLoading = ()
+
 const renderProductItems = async () => {
   const items = document.querySelector('.items');
+  const loading = createCustomElement('p', 'loading', 'carregando...');
+  items.appendChild(loading);
   const { results } = await fetchProducts('computador');
-  
+  items.removeChild(items.firstChild);
   results.forEach((item) => {
     const newItem = createProductItemElement(item);
     items.appendChild(newItem);
