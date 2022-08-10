@@ -57,7 +57,7 @@ const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').inn
 
 const renderProductItems = async () => {
   const items = document.querySelector('.items');
-  const { results } = await fetchProducts();
+  const { results } = await fetchProducts('computador');
   
   results.forEach((item) => {
     const newItem = createProductItemElement(item);
