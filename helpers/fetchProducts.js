@@ -1,8 +1,8 @@
-// function later(delay) {
-//   return new Promise((resolve) => {
-//       setTimeout(resolve, delay);
-//   });
-// }
+function later(delay) {
+  return new Promise((resolve) => {
+      setTimeout(resolve, delay);
+  });
+}
 
 const fetchProducts = async (item) => {
   const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${item}`);

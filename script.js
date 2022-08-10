@@ -1,3 +1,4 @@
+const items = document.querySelector('.items');
 const cartList = document.querySelector('.cart__items');
 const totalValue = document.querySelector('.total-price');
 const clearBtn = document.querySelector('.empty-cart');
@@ -65,14 +66,21 @@ const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) =>
 
 // const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
-// const addLoading = ()
-
-const renderProductItems = async () => {
-  const items = document.querySelector('.items');
+const addLoading = () => {
   const loading = createCustomElement('p', 'loading', 'carregando...');
   items.appendChild(loading);
-  const { results } = await fetchProducts('computador');
+  items.style.alignItems = 'center';
+};
+
+const removeLoading = () => {
   items.removeChild(items.firstChild);
+  items.style.alignItems = '';
+};
+
+const renderProductItems = async () => {
+  addLoading();
+  const { results } = await fetchProducts('computador');
+  removeLoading();
   results.forEach((item) => {
     const newItem = createProductItemElement(item);
     items.appendChild(newItem);
