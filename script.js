@@ -26,8 +26,9 @@ const sumCart = () => {
 
 const cartItemRemove = (event, sku) => {
   cartList.removeChild(event.target);
-  // console.log(event.target);
-  localCartList = localCartList.filter((item) => item.id !== sku);
+  const itemIndex = localCartList.findIndex((item) => item.id === sku);
+  localCartList.splice(itemIndex, 1);
+  // localCartList = localCartList.filter((item) => item.id !== sku);
   // console.log(localCartList);
   sumCart();
   saveCartItems(JSON.stringify(localCartList));
